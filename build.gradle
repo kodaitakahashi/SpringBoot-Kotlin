@@ -2,6 +2,7 @@ buildscript {
 	ext {
 		kotlinVersion = '1.1.3-2'
 		springBootVersion = '2.0.0.BUILD-SNAPSHOT'
+		mysqlVersion = '5.1.44'
 	}
 	repositories {
 		mavenCentral()
@@ -44,8 +45,14 @@ dependencies {
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile("org.jetbrains.kotlin:kotlin-stdlib-jre8:${kotlinVersion}")
 	compile("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+	runtime('org.springframework.boot:spring-boot-devtools')
 	compile "io.springfox:springfox-swagger2:2.6.0"
 	compile "io.springfox:springfox-swagger-ui:2.6.0"
+	compile 'com.github.seratch:kotliquery:1.1.5'
+	compile 'com.h2database:h2:1.4.196'
+	compile 'com.zaxxer:HikariCP:2.7.2'
+	compile "mysql:mysql-connector-java:${mysqlVersion}"
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+
 }
 
