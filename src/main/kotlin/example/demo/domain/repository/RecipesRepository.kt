@@ -1,10 +1,13 @@
 package example.demo.domain.repository
 
 import example.demo.domain.model.Recipe
+import kotliquery.Row
 import kotliquery.Session
 import kotliquery.queryOf
-import kotliquery.Row
+import kotliquery.sessionOf
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Repository
+import javax.sql.DataSource
 
 /**
  * Created by kodaitakahashi on 2017/10/24.
@@ -12,6 +15,9 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class RecipesRepository {
+
+    @Autowired
+    lateinit var dataSource: DataSource
 
     private val selectRecipeByPrimaryKey : String = "select id, order_id, content from recipes where id = ? order by order_id";
 
@@ -27,8 +33,10 @@ class RecipesRepository {
      * idを基準にレシピを取得する
      */
     fun getRecipe(id : Int) : MutableList<Recipe> {
-        val returnedList : MutableList<Recipe> = mutableListOf();
-        BaseRepository.getSession().use<Session, Unit> {
+        val returnedList : MutableList<Recipe> = mutableListOf()
+
+
+        sessionOf(dataSource).use<Session, Unit> {
            val selectRecipe = queryOf(selectRecipeByPrimaryKey, id).map(toRecipe).asList;
             returnedList.addAll(it.run(selectRecipe));
 
