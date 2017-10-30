@@ -1,12 +1,17 @@
 package example.demo.controller
 
+import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import example.demo.domain.model.Person
 import example.demo.domain.model.Recipe
+import example.demo.domain.model.Responce
 import example.demo.domain.repository.RecipesRepository
 import example.demo.exception.BadRequestException
 import example.demo.exception.NotFoundException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 
@@ -22,11 +27,12 @@ class RecipesContorller {
     lateinit var recipesRepository : RecipesRepository
 
     @RequestMapping(value= "/{id}", method = arrayOf(RequestMethod.GET))
-    fun getRecipes(@PathVariable(value = "id") id: String): MutableList<Recipe> {
+    fun getRecipes(@PathVariable(value = "id") id: String): Responce {
         val recipes : List<Recipe>
         try {
             val intId : Int = id.toInt()
-           recipes= recipesRepository.getRecipe(intId)
+            recipes= recipesRepository.getRecipe(intId)
+
         } catch (e : NumberFormatException) {
             throw BadRequestException("301", "BadRequest")
         }
@@ -34,8 +40,12 @@ class RecipesContorller {
         if (recipes.isEmpty()) {
             throw NotFoundException("404", "Not found recipe!!")
         }
+        val mapper = jacksonObjectMapper().registerModule(KotlinModule())
+        val jsonStr: String = mapper.writeValueAsString(recipes)
 
-        return recipes;
+
+
+        return Responce(HttpStatus.OK, "OK", recipes);
 
     }
 
