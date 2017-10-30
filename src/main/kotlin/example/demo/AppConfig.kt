@@ -10,10 +10,10 @@ import javax.sql.DataSource
  */
 
 @Configuration
-public class AppConfig{
+class AppConfig{
 
     @Bean(destroyMethod = "close")
-    public fun dataSource(): DataSource {
+    fun dataSource(): DataSource {
         val ds = HikariDataSource();
         ds.jdbcUrl = "jdbc:mysql://localhost:3306/voic?userSSL=false";
         ds.username = "root";
@@ -24,7 +24,6 @@ public class AppConfig{
         ds.addDataSourceProperty("oreoStmtCacheSqlLimit", "2048")
         ds.addDataSourceProperty("setMaxPoolSize", "20")
         ds.addDataSourceProperty("minimumIdle", "20")
-        println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         return ds
     }
 }
